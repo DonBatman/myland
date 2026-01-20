@@ -62,7 +62,8 @@ core.register_on_mods_loaded(function()
     end
 end)
 
-if core.get_modpath("mesecons_mvps") then
+-- Only register the MVPS stopper if the mesecons table actually exists
+if core.get_modpath("mesecons_mvps") and mesecons and mesecons.register_mvps_stopper then
     mesecons.register_mvps_stopper(function(pos, node)
         return myland.is_protected_at_pos(pos, nil)
     end)
@@ -80,7 +81,7 @@ core.register_on_punchnode(function(pos, node, puncher)
         end
     end
 end)
-core.register_chatcommand("clear_fire", {
+core.register_chatcommand("cf", {
     description = "Clears all fire in a 50-node radius",
     privs = {interact = true},
     func = function(name)
@@ -98,6 +99,7 @@ core.register_chatcommand("clear_fire", {
         return true, "Extinguished " .. #fires .. " fire nodes."
     end,
 })
+
 core.register_on_placenode(function(pos, newnode, placer, oldnode, itemstack, pointed_thing)
     if newnode.name:find("fire:basic_flame") or newnode.name:find("fire:permanent_fire") then
         if myland.is_protected_at_pos(pos, nil) then

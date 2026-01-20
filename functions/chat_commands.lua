@@ -17,9 +17,9 @@ core.register_chatcommand("claim", {
         local data = myland.storage:get_string(key)
         if data ~= "" then return false, "This vertical slice is already claimed." end
 
-        local slice_center = math.floor(pos.y / 300) * 300
+        local slice_center = math.floor(pos.y / 150) * 150
         local low = slice_center
-        local high = slice_center + 299
+        local high = slice_center + 149
 
         local new_data = table.concat({name, os.time(), "none", "0", ",", low, high}, "|")
         myland.storage:set_string(key, new_data)
