@@ -62,7 +62,6 @@ core.register_on_mods_loaded(function()
     end
 end)
 
--- Only register the MVPS stopper if the mesecons table actually exists
 if core.get_modpath("mesecons_mvps") and mesecons and mesecons.register_mvps_stopper then
     mesecons.register_mvps_stopper(function(pos, node)
         return myland.is_protected_at_pos(pos, nil)
