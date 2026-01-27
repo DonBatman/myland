@@ -98,7 +98,24 @@ core.register_chatcommand("cf", {
         return true, "Extinguished " .. #fires .. " fire nodes."
     end,
 })
-
+core.register_chatcommand("clear_fire", {
+    description = "Clears all fire in a 50-node radius",
+    privs = {interact = true},
+    func = function(name)
+        local player = core.get_player_by_name(name)
+        if not player then return end
+        local ppos = player:get_pos()
+        local fires = core.find_nodes_in_area(
+            {x=ppos.x-50, y=ppos.y-50, z=ppos.z-50},
+            {x=ppos.x+50, y=ppos.y+50, z=ppos.z+50},
+            {"fire:basic_flame", "fire:permanent_fire", "fire:basic_fire"}
+        )
+        for _, fpos in ipairs(fires) do
+            core.set_node(fpos, {name="air"})
+        end
+        return true, "Extinguished " .. #fires .. " fire nodes."
+    end,
+})
 core.register_on_placenode(function(pos, newnode, placer, oldnode, itemstack, pointed_thing)
     if newnode.name:find("fire:basic_flame") or newnode.name:find("fire:permanent_fire") then
         if myland.is_protected_at_pos(pos, nil) then
@@ -106,6 +123,7 @@ core.register_on_placenode(function(pos, newnode, placer, oldnode, itemstack, po
         end
     end
 end)
+
 if core.registered_nodes["fire:basic_flame"] then
     core.override_item("fire:basic_flame", {
         on_construct = function(pos)
